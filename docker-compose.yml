@@ -7,19 +7,19 @@ services:
       POSTGRES_PASSWORD: 123
       POSTGRES_DB: client_db
     ports:
-      - "5433:5433"
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
   app:
     build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: spring_client_app
+      context: client
+      dockerfile: client/Dockerfile
+    container_name: client_postgres
     depends_on:
       - postgres
     ports:
-      - "8081:8081"
+      - "8082:8082"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/client_db
       SPRING_DATASOURCE_USERNAME: julio
@@ -29,3 +29,4 @@ services:
 
 volumes:
   postgres_data:
+    driver: local
