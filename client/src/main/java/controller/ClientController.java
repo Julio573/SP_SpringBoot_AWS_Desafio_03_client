@@ -2,6 +2,8 @@ package controller;
 
 import entities.Client;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.flogger.Flogger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.ClientService;
@@ -9,24 +11,38 @@ import service.ClientService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/client")
+@Slf4j
 public class ClientController {
 
     private final ClientService clientService;
+    Client client = new Client();
 
     @PostMapping("/create")
     public ResponseEntity<Client> createClient(@RequestBody Client client) {
+        log.info("Request to create client {}", client);
         Client newClient = clientService.save(client);
         return ResponseEntity.ok(newClient);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Client> getById(@PathVariable Long id) {
+        log.info("Request to get client {}", id);
         Client client = clientService.findById(id);
         return ResponseEntity.ok(client);
     }
 
-    /*@PatchMapping("/{id}")
-    public ResponseEntity<Client> updatePassword(@PathVariable Long id, @RequestBody Client client) {
-        Client client1 = clientService.updatePassword(Long id, String password, String newPassword, String confirmPassword)
-    } */
+    @PatchMapping("/{id}")
+    public ResponseEntity<Client> updatePassword(@PathVariable Long id, @RequestParam String password, @RequestParam String newPassword) {
+        log.info("Request to update password {}", id);
+
+        boolean validPassword = clientService.confirmPassword(id, password);
+
+        if (!validPassword) {
+            log.warn("Invalid password");
+            return ResponseEntity.badRequest().build();
+        }
+        clientService.updatePassword(id, newPassword);
+        log.info("Password updated successfully for user with ID: {}", id);
+        return ResponseEntity.ok().body(client);
+    }
 }
