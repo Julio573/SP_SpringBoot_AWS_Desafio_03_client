@@ -3,6 +3,7 @@ package service;
 import entities.Client;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import repository.ClientRepository;
 
@@ -10,6 +11,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class ClientService {
 
     private final ClientRepository clientRepository;
@@ -17,23 +19,31 @@ public class ClientService {
 
     @Transactional
     public Client save(Client client) {
+        log.info("Registering a new client {}", client);
         return clientRepository.save(client);
     }
 
     @Transactional
     public Client findById(Long id) {
+        log.info("Finding a client by id {}", id);
         return clientRepository.findById(id).orElse(null);
     }
 
     @Transactional
     public List<Client> findAll() {
+        log.info("Finding all clients");
         return clientRepository.findAll();
     }
 
     @Transactional
-    public Client updatePassword(Long id, String password, String newPassword, String confirmPassword) {
+    public Client updatePassword(Long id, String newPassword) {
         client.setPassword(newPassword);
         return client;
+    }
+
+    @Transactional
+    public boolean confirmPassword(Long id, String password) {
+        return password.equals(clientRepository.findById(id).get().getPassword());
     }
 
 
