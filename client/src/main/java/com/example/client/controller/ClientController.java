@@ -1,5 +1,6 @@
 package com.example.client.controller;
 
+import com.example.client.dto.ClientDTO;
 import com.example.client.entities.Client;
 import com.example.client.service.ClientService;
 import lombok.RequiredArgsConstructor;
@@ -19,23 +20,23 @@ public class ClientController {
     Client client = new Client();
 
     @PostMapping("/create")
-    public ResponseEntity<Client> createClient(@RequestBody Client client) {
+    public ResponseEntity<ClientDTO> createClient(@RequestBody Client client) {
         log.info("Request to create client {}", client);
-        Client newClient = clientService.save(client);
+        ClientDTO newClient = clientService.save(client);
         return ResponseEntity.ok(newClient);
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<Client>> listAllClients() {
+    public ResponseEntity<List<ClientDTO>> listAllClients() {
         log.info("Request to list all clients");
-        List<Client> clients = clientService.findAll();
+        List<ClientDTO> clients = clientService.findAll();
         return ResponseEntity.ok(clients);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Client> getById(@PathVariable Long id) {
+    public ResponseEntity<ClientDTO> getById(@PathVariable Long id) {
         log.info("Request to get client {}", id);
-        Client client = clientService.findById(id);
+        ClientDTO client = clientService.findById(id);
         return ResponseEntity.ok(client);
     }
 
