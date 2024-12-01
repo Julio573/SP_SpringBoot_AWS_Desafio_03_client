@@ -1,12 +1,14 @@
-package controller;
+package com.example.client.controller;
 
-import entities.Client;
+import com.example.client.entities.Client;
+import com.example.client.service.ClientService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.flogger.Flogger;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import service.ClientService;
+
+import java.security.PublicKey;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,6 +26,13 @@ public class ClientController {
         return ResponseEntity.ok(newClient);
     }
 
+    @GetMapping("/list")
+    public ResponseEntity<List<Client>> listAllClients() {
+        log.info("Request to list all clients");
+        List<Client> clients = clientService.findAll();
+        return ResponseEntity.ok(clients);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Client> getById(@PathVariable Long id) {
         log.info("Request to get client {}", id);
@@ -31,7 +40,7 @@ public class ClientController {
         return ResponseEntity.ok(client);
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/update/{id}")
     public ResponseEntity<Client> updatePassword(@PathVariable Long id, @RequestParam String password, @RequestParam String newPassword) {
         log.info("Request to update password {}", id);
 

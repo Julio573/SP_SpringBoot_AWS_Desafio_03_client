@@ -1,4 +1,4 @@
-package entities;
+package com.example.client.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -28,3 +28,4 @@ public class Client {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 }
+

@@ -1,16 +1,16 @@
-package service;
+package com.example.client.service;
 
-import entities.Client;
+import com.example.client.entities.Client;
+import com.example.client.repository.ClientRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import repository.ClientRepository;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class ClientService {
 
@@ -45,6 +45,5 @@ public class ClientService {
     public boolean confirmPassword(Long id, String password) {
         return password.equals(clientRepository.findById(id).get().getPassword());
     }
-
 
 }
