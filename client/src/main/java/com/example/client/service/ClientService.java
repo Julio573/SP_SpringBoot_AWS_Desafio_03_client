@@ -1,5 +1,7 @@
 package com.example.client.service;
 
+import com.example.client.dto.ClientDTO;
+import com.example.client.dto.mapper.ClientMapper;
 import com.example.client.entities.Client;
 import com.example.client.repository.ClientRepository;
 import jakarta.transaction.Transactional;
@@ -8,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,21 +21,26 @@ public class ClientService {
     Client client = new Client();
 
     @Transactional
-    public Client save(Client client) {
+    public ClientDTO save(Client client) {
         log.info("Registering a new client {}", client);
-        return clientRepository.save(client);
+        Client newClient = clientRepository.save(client);
+        return ClientMapper.toDTO(newClient);
     }
 
     @Transactional
-    public Client findById(Long id) {
+    public ClientDTO findById(Long id) {
         log.info("Finding a client by id {}", id);
-        return clientRepository.findById(id).orElse(null);
+        Client client = clientRepository.findById(id).orElse(null);
+        return ClientMapper.toDTO(client);
     }
 
     @Transactional
-    public List<Client> findAll() {
+    public List<ClientDTO> findAll() {
         log.info("Finding all clients");
-        return clientRepository.findAll();
+        List<Client> client = clientRepository.findAll();
+        return client.stream()
+                .map(ClientMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Transactional
